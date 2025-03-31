@@ -23,6 +23,10 @@ layout: default
   {%- if site.disqus.shortname -%}
     {%- include disqus_comments.html -%}
   {%- endif -%}
+
+  {%- if page.use_pyodide -%}
+    {%- include pyodide.html -%}
+  {%- endif -%}
 </article>
 
 <!-- MathJax Configuration -->

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Math &amp; ML Blog | Educational content about mathematics and machine learning</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Math &amp; ML Blog" />
+<meta name="author" content="Roland Riachi" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Educational content about mathematics and machine learning" />
+<meta property="og:description" content="Educational content about mathematics and machine learning" />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
+<meta property="og:site_name" content="Math &amp; ML Blog" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Math &amp; ML Blog" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"Roland Riachi"},"description":"Educational content about mathematics and machine learning","headline":"Math &amp; ML Blog","name":"Math &amp; ML Blog","url":"http://localhost:4000/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Math &amp; ML Blog" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Math &amp; ML Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/">Math &amp;amp; ML Blog</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="home"><h1 class="page-heading">Math &amp; ML Blog</h1><h1 id="math--ml-blog">Math &amp; ML Blog</h1>
+
+<p>A Jekyll-based blog for sharing educational content about mathematics and machine learning.</p>
+
+<h2 id="features">Features</h2>
+
+<ul>
+  <li>Modern, responsive design</li>
+  <li>Support for mathematical equations using MathJax</li>
+  <li>Code syntax highlighting with Prism.js</li>
+  <li>Category and tag support</li>
+  <li>Social media integration</li>
+  <li>Disqus comments (optional)</li>
+</ul>
+
+<h2 id="setup">Setup</h2>
+
+<ol>
+  <li>Install Ruby and Jekyll:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># On macOS</span>
+brew <span class="nb">install </span>ruby
+gem <span class="nb">install </span>bundler jekyll
+</code></pre></div>    </div>
+  </li>
+  <li>Install dependencies:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">install</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Run the development server:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">exec </span>jekyll serve
+</code></pre></div>    </div>
+  </li>
+  <li>Visit <code class="language-plaintext highlighter-rouge">http://localhost:4000</code> to preview your site.</li>
+</ol>
+
+<h2 id="creating-new-posts">Creating New Posts</h2>
+
+<p>Create new posts in the <code class="language-plaintext highlighter-rouge">_posts</code> directory with the following naming convention:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>YYYY-MM-DD-title.md
+</code></pre></div></div>
+
+<p>Example front matter:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="na">layout</span><span class="pi">:</span> <span class="s">post</span>
+<span class="na">title</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Your</span><span class="nv"> </span><span class="s">Post</span><span class="nv"> </span><span class="s">Title"</span>
+<span class="na">date</span><span class="pi">:</span> <span class="s">YYYY-MM-DD</span>
+<span class="na">categories</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">Category1</span><span class="pi">,</span> <span class="nv">Category2</span><span class="pi">]</span>
+<span class="na">tags</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">tag1</span><span class="pi">,</span> <span class="nv">tag2</span><span class="pi">]</span>
+<span class="na">author</span><span class="pi">:</span> <span class="s">Your Name</span>
+<span class="nn">---</span>
+</code></pre></div></div>
+
+<h2 id="deployment">Deployment</h2>
+
+<p>This site is configured for GitHub Pages deployment. Simply push your changes to the main branch of your repository, and GitHub Pages will automatically build and deploy your site.</p>
+
+<h2 id="customization">Customization</h2>
+
+<ul>
+  <li>Edit <code class="language-plaintext highlighter-rouge">_config.yml</code> to modify site settings</li>
+  <li>Modify <code class="language-plaintext highlighter-rouge">assets/css/main.css</code> to customize the site’s appearance</li>
+  <li>Add new layouts in the <code class="language-plaintext highlighter-rouge">_layouts</code> directory</li>
+  <li>Create new includes in the <code class="language-plaintext highlighter-rouge">_includes</code> directory</li>
+</ul>
+
+<h2 id="license">License</h2>
+
+<p>This project is licensed under the MIT License - see the LICENSE file for details.</p>
+<h2 class="post-list-heading">Posts</h2>
+    <ul class="post-list"><li><span class="post-meta">Apr 1, 2024</span>
+        <h3>
+          <a class="post-link" href="/posts/understanding-model-regularization/">
+            Understanding Model Regularization
+          </a>
+        </h3></li><li><span class="post-meta">Mar 31, 2024</span>
+        <h3>
+          <a class="post-link" href="/posts/introduction-to-linear-regression/">
+            Introduction to Linear Regression
+          </a>
+        </h3></li></ul>
+
+    <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p></div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Math &amp; ML Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">{&quot;name&quot;=&gt;&quot;Roland Riachi&quot;, &quot;email&quot;=&gt;&quot;your.email@example.com&quot;, &quot;bio&quot;=&gt;&quot;Mathematics and Machine Learning Enthusiast&quot;, &quot;location&quot;=&gt;&quot;Your Location&quot;, &quot;links&quot;=&gt;[{&quot;label&quot;=&gt;&quot;GitHub&quot;, &quot;icon&quot;=&gt;&quot;fab fa-github&quot;, &quot;url&quot;=&gt;&quot;https://github.com/rolandriachi&quot;}]}</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Educational content about mathematics and machine learning</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

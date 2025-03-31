@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-03-31T15:59:39-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Math &amp;amp; ML Blog</title><subtitle>Educational content about mathematics and machine learning</subtitle><author><name>Roland Riachi</name><email>your.email@example.com</email></author><entry><title type="html">Understanding Model Regularization</title><link href="http://localhost:4000/posts/understanding-model-regularization/" rel="alternate" type="text/html" title="Understanding Model Regularization" /><published>2024-04-01T00:00:00-04:00</published><updated>2024-04-01T00:00:00-04:00</updated><id>http://localhost:4000/posts/understanding-model-regularization</id><content type="html" xml:base="http://localhost:4000/posts/understanding-model-regularization/"><![CDATA[<p>In our <a href="/posts/introduction-to-linear-regression/">previous post on linear regression</a>, we explored the foundations of linear models. Today, we’ll dive into regularization techniques that help prevent overfitting in these models.</p>
+
+<h2 id="why-regularization">Why Regularization?</h2>
+
+<p>While <a href="/posts/introduction-to-linear-regression/#mathematical-foundation">linear regression</a> is powerful in its simplicity, it can sometimes fit noise in the training data too closely. This is where regularization comes in - it adds constraints to the model to prevent this overfitting.</p>
+
+<h2 id="types-of-regularization">Types of Regularization</h2>
+
+<h3 id="ridge-regression-l2">Ridge Regression (L2)</h3>
+
+<p>Ridge regression adds the L2 norm of the coefficients to the cost function:</p>
+
+\[\min_{\beta} \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^p \beta_j^2\]
+
+<p>where (\lambda) is the regularization strength.</p>
+
+<h3 id="lasso-regression-l1">Lasso Regression (L1)</h3>
+
+<p>Lasso (Least Absolute Shrinkage and Selection Operator) uses the L1 norm instead:</p>
+
+\[\min_{\beta} \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^p |\beta_j|\]
+
+<h2 id="implementation-in-python">Implementation in Python</h2>
+
+<p>Building on our <a href="/posts/introduction-to-linear-regression/#implementation-in-python">previous implementation</a>, here’s how we can add ridge regularization:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="k">class</span> <span class="nc">RidgeRegression</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">coefficients</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">intercept</span> <span class="o">=</span> <span class="bp">None</span>
+    
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="c1"># Add bias term
+</span>        <span class="n">X_b</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">((</span><span class="n">X</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">X</span><span class="p">]</span>
+        
+        <span class="c1"># Calculate coefficients using normal equation with regularization
+</span>        <span class="n">n_features</span> <span class="o">=</span> <span class="n">X_b</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_features</span><span class="p">)</span>
+        <span class="n">I</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Don't regularize the bias term
+</span>        
+        <span class="bp">self</span><span class="p">.</span><span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">inv</span><span class="p">(</span>
+            <span class="n">X_b</span><span class="p">.</span><span class="n">T</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X_b</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="p">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">I</span>
+        <span class="p">).</span><span class="n">dot</span><span class="p">(</span><span class="n">X_b</span><span class="p">.</span><span class="n">T</span><span class="p">).</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="p">.</span><span class="n">intercept</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">coefficients</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+</code></pre></div></div>
+
+<h2 id="when-to-use-each-type">When to Use Each Type</h2>
+
+<ul>
+  <li><strong>Ridge Regression</strong>: When you suspect many features contribute a bit to the outcome</li>
+  <li><strong>Lasso Regression</strong>: When you want feature selection (some coefficients become exactly zero)</li>
+  <li><strong>Elastic Net</strong>: When you want a combination of both (we’ll cover this in a future post)</li>
+</ul>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<p>In future posts, we’ll explore:</p>
+<ul>
+  <li><a href="/coming-soon" title="Elastic Net: Combining L1 and L2 Regularization">Elastic Net Regression</a> (coming soon)</li>
+  <li><a href="/coming-soon" title="Cross-validation Techniques for Model Selection">Cross-validation for Model Selection</a> (coming soon)</li>
+  <li><a href="/coming-soon" title="Advanced Feature Engineering Techniques">Feature Engineering</a> (coming soon)</li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Regularization is a crucial technique in the machine learning practitioner’s toolbox. By understanding when and how to apply different types of regularization, we can build more robust and generalizable models.</p>]]></content><author><name>Roland Riachi</name></author><category term="Machine Learning" /><category term="Mathematics" /><category term="regularization" /><category term="ridge-regression" /><category term="lasso-regression" /><category term="python" /><summary type="html"><![CDATA[In our previous post on linear regression, we explored the foundations of linear models. Today, we’ll dive into regularization techniques that help prevent overfitting in these models.]]></summary></entry><entry><title type="html">Introduction to Linear Regression</title><link href="http://localhost:4000/posts/introduction-to-linear-regression/" rel="alternate" type="text/html" title="Introduction to Linear Regression" /><published>2024-03-31T00:00:00-04:00</published><updated>2024-03-31T00:00:00-04:00</updated><id>http://localhost:4000/posts/introduction-to-linear-regression</id><content type="html" xml:base="http://localhost:4000/posts/introduction-to-linear-regression/"><![CDATA[<p>Linear regression is one of the most fundamental and widely used algorithms in machine learning. In this post, we’ll explore the mathematical foundations of linear regression and implement it from scratch in Python.</p>
+
+<h2 id="mathematical-foundation">Mathematical Foundation</h2>
+
+<p>Linear regression models the relationship between a dependent variable (y) and one or more independent variables (X) using a linear function:</p>
+
+\[y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_nx_n + \epsilon\]
+
+<p>where:</p>
+<ul>
+  <li>(\beta_0) is the y-intercept</li>
+  <li>(\beta_i) are the coefficients for each feature</li>
+  <li>(\epsilon) is the error term</li>
+</ul>
+
+<p>The goal is to find the values of (\beta) that minimize the sum of squared errors:</p>
+
+<p>[ \min_{\beta} \sum_{i=1}^n (y_i - \hat{y}_i)^2 ]</p>
+
+<h2 id="implementation-in-python">Implementation in Python</h2>
+
+<p>Here’s a simple implementation of linear regression using NumPy:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="k">class</span> <span class="nc">LinearRegression</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">coefficients</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">intercept</span> <span class="o">=</span> <span class="bp">None</span>
+    
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="c1"># Add bias term
+</span>        <span class="n">X_b</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">((</span><span class="n">X</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">X</span><span class="p">]</span>
+        
+        <span class="c1"># Calculate coefficients using normal equation
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">inv</span><span class="p">(</span><span class="n">X_b</span><span class="p">.</span><span class="n">T</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X_b</span><span class="p">)).</span><span class="n">dot</span><span class="p">(</span><span class="n">X_b</span><span class="p">.</span><span class="n">T</span><span class="p">).</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">intercept</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">coefficients</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">coefficients</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">coefficients</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="p">.</span><span class="n">intercept</span>
+</code></pre></div></div>
+
+<h2 id="example-usage">Example Usage</h2>
+
+<p>Try modifying the parameters below to see how they affect the linear regression:</p>
+
+<div class="interactive-code" id="regression-example">
+<pre id="code-regression-example">
+import numpy as np
+from matplotlib import pyplot as plt
+
+# Generate sample data
+def generate_data(a=2, b=4, c=3):
+    np.random.seed(42)
+    X = a * np.random.rand(100, 1)
+    y = b + c * X + np.random.randn(100, 1)
+    return X, y
+
+class LinearRegression:
+    def __init__(self):
+        self.coefficients = None
+        self.intercept = None
+    
+    def fit(self, X, y):
+        # Add bias term
+        X_b = np.c_[np.ones((X.shape[0], 1)), X]
+        
+        # Calculate coefficients using normal equation
+        self.coefficients = np.linalg.inv(X_b.T.dot(X_b)).dot(X_b.T).dot(y)
+        self.intercept = self.coefficients[0]
+        self.coefficients = self.coefficients[1:]
+    
+    def predict(self, X):
+        return np.dot(X, self.coefficients) + self.intercept
+
+# Create and fit the model
+X, y = generate_data(a=2, b=4, c=3)
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+X_new = np.array([[0], [2]])
+y_pred = model.predict(X_new)
+
+# Plot results
+plt.figure(figsize=(10, 6))
+plt.scatter(X, y, color='blue', alpha=0.5)
+plt.plot(X_new, y_pred, color='red', linewidth=2)
+plt.xlabel('X')
+plt.ylabel('y')
+plt.title(f'Linear Regression\nIntercept: {model.intercept:.2f}, Slope: {model.coefficients[0]:.2f}')
+plt.grid(True)
+plt.show()
+
+print(f"Intercept: {model.intercept:.2f}")
+print(f"Coefficients: {model.coefficients[0]:.2f}")
+</pre>
+<div id="editor-regression-example"></div>
+<button id="run-regression-example" class="run-button">Run</button>
+<div id="output-regression-example" class="output"></div>
+</div>
+
+<script>
+createPyodideInstance('regression-example');
+</script>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Linear regression is a powerful and interpretable model that serves as a foundation for understanding more complex machine learning algorithms. In future posts, we’ll explore extensions like ridge regression, lasso regression, and polynomial regression.</p>
+
+<p>Stay tuned for more content about machine learning and mathematics!</p>]]></content><author><name>Roland Riachi</name></author><category term="Machine Learning" /><category term="Mathematics" /><category term="linear-regression" /><category term="statistics" /><category term="python" /><summary type="html"><![CDATA[Linear regression is one of the most fundamental and widely used algorithms in machine learning. In this post, we’ll explore the mathematical foundations of linear regression and implement it from scratch in Python.]]></summary></entry></feed>

@@ -5,6 +5,7 @@ date: 2024-03-31
 categories: [Machine Learning, Mathematics]
 tags: [linear-regression, statistics, python]
 author: Roland Riachi
+use_pyodide: true
 ---
 
 Linear regression is one of the most fundamental and widely used algorithms in machine learning. In this post, we'll explore the mathematical foundations of linear regression and implement it from scratch in Python.
@@ -13,7 +14,9 @@ Linear regression is one of the most fundamental and widely used algorithms in m
 
 Linear regression models the relationship between a dependent variable \(y\) and one or more independent variables \(X\) using a linear function:
 
-\[ y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_nx_n + \epsilon \]
+$$ 
+    y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_nx_n + \epsilon 
+$$
 
 where:
 - \(\beta_0\) is the y-intercept
@@ -51,15 +54,39 @@ class LinearRegression:
 
 ## Example Usage
 
-Let's create some sample data and test our implementation:
+Try modifying the parameters below to see how they affect the linear regression:
 
-```python
+<div class="interactive-code" id="regression-example">
+<pre id="code-regression-example">
+import numpy as np
+from matplotlib import pyplot as plt
+
 # Generate sample data
-np.random.seed(42)
-X = 2 * np.random.rand(100, 1)
-y = 4 + 3 * X + np.random.randn(100, 1)
+def generate_data(a=2, b=4, c=3):
+    np.random.seed(42)
+    X = a * np.random.rand(100, 1)
+    y = b + c * X + np.random.randn(100, 1)
+    return X, y
+
+class LinearRegression:
+    def __init__(self):
+        self.coefficients = None
+        self.intercept = None
+    
+    def fit(self, X, y):
+        # Add bias term
+        X_b = np.c_[np.ones((X.shape[0], 1)), X]
+        
+        # Calculate coefficients using normal equation
+        self.coefficients = np.linalg.inv(X_b.T.dot(X_b)).dot(X_b.T).dot(y)
+        self.intercept = self.coefficients[0]
+        self.coefficients = self.coefficients[1:]
+    
+    def predict(self, X):
+        return np.dot(X, self.coefficients) + self.intercept
 
 # Create and fit the model
+X, y = generate_data(a=2, b=4, c=3)
 model = LinearRegression()
 model.fit(X, y)
 
@@ -67,9 +94,27 @@ model.fit(X, y)
 X_new = np.array([[0], [2]])
 y_pred = model.predict(X_new)
 
+# Plot results
+plt.figure(figsize=(10, 6))
+plt.scatter(X, y, color='blue', alpha=0.5)
+plt.plot(X_new, y_pred, color='red', linewidth=2)
+plt.xlabel('X')
+plt.ylabel('y')
+plt.title(f'Linear Regression\nIntercept: {model.intercept:.2f}, Slope: {model.coefficients[0]:.2f}')
+plt.grid(True)
+plt.show()
+
 print(f"Intercept: {model.intercept:.2f}")
 print(f"Coefficients: {model.coefficients[0]:.2f}")
-```
+</pre>
+<div id="editor-regression-example"></div>
+<button id="run-regression-example" class="run-button">Run</button>
+<div id="output-regression-example" class="output"></div>
+</div>
+
+<script>
+createPyodideInstance('regression-example');
+</script>
 
 ## Conclusion
 

@@ -1,7 +1,8 @@
 source "https://rubygems.org"
 
-gem "jekyll", "~> 4.3.2"
-gem "minima", "~> 2.5"
+# Use github-pages gem for better compatibility
+gem "github-pages", group: :jekyll_plugins
+gem "webrick", "~> 1.7"
 
 # If you have any plugins, put them here!
 group :jekyll_plugins do
