@@ -1,0 +1,62 @@
+title: Math & ML Blog
+description: Educational content about mathematics and machine learning
+baseurl: ""
+url: "https://rolandriachi.github.io"
+
+# Build settings
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-paginate
+
+# Author information
+author:
+  name: Roland Riachi
+  email: your.email@example.com
+  bio: Mathematics and Machine Learning Enthusiast
+  location: Your Location
+  links:
+    - label: GitHub
+      icon: fab fa-github
+      url: https://github.com/rolandriachi
+
+# Social media
+social_media:
+  - name: GitHub
+    url: https://github.com/rolandriachi
+  - name: Twitter
+    url: https://twitter.com/yourusername
+  - name: LinkedIn
+    url: https://linkedin.com/in/yourusername
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /:collection/:title/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      author: Roland Riachi
+      comments: true
+      share: true
+
+# Pagination
+paginate: 5
+paginate_path: "/page:num/"
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .git/ 
