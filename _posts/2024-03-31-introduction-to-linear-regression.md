@@ -56,9 +56,34 @@ class LinearRegression:
 
 Try modifying the parameters below to see how they affect the linear regression:
 
+<style>
+.interactive-code .CodeMirror {
+    height: calc(50 * 24px);"
+}
+
+.interactive-code {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+}
+
+#output-regression-example {
+    position: relative;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    clear: both;
+}
+
+.run-button {
+    position: relative;
+    margin: 10px 0;
+}
+</style>
+
 <div class="interactive-code" id="regression-example">
-<pre id="code-regression-example">
-import numpy as np
+<div id="editor-regression-example" data-code="import numpy as np
 from matplotlib import pyplot as plt
 
 # Generate sample data
@@ -100,21 +125,15 @@ plt.scatter(X, y, color='blue', alpha=0.5)
 plt.plot(X_new, y_pred, color='red', linewidth=2)
 plt.xlabel('X')
 plt.ylabel('y')
-plt.title(f'Linear Regression\nIntercept: {model.intercept:.2f}, Slope: {model.coefficients[0]:.2f}')
+plt.title(f'Linear Regression\nIntercept: {model.intercept.item():.2f}, Slope: {model.coefficients[0].item():.2f}')
 plt.grid(True)
 plt.show()
 
-print(f"Intercept: {model.intercept:.2f}")
-print(f"Coefficients: {model.coefficients[0]:.2f}")
-</pre>
-<div id="editor-regression-example"></div>
-<button id="run-regression-example" class="run-button">Run</button>
-<div id="output-regression-example" class="output"></div>
+print(f'Intercept: {model.intercept.item():.2f}')
+print(f'Coefficients: {model.coefficients[0].item():.2f}')"></div>
+    <button id="run-regression-example" class="run-button">Run</button>
+    <div id="output-regression-example" class="output"></div>
 </div>
-
-<script>
-createPyodideInstance('regression-example');
-</script>
 
 ## Conclusion
 

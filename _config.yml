@@ -59,4 +59,12 @@ exclude:
   - Gemfile.lock
   - node_modules
   - vendor
-  - .git/ 
+  - .git/
+
+# Security settings
+pyodide:
+  allowed_packages:
+    - numpy
+    - matplotlib.pyplot
+  max_execution_time: 30000  # milliseconds
+  max_output_size: 1000000  # bytes 

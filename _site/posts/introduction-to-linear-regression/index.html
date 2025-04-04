@@ -94,9 +94,34 @@
 
 <p>Try modifying the parameters below to see how they affect the linear regression:</p>
 
+<style>
+.interactive-code .CodeMirror {
+    height: calc(50 * 24px);"
+}
+
+.interactive-code {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+}
+
+#output-regression-example {
+    position: relative;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    clear: both;
+}
+
+.run-button {
+    position: relative;
+    margin: 10px 0;
+}
+</style>
+
 <div class="interactive-code" id="regression-example">
-<pre id="code-regression-example">
-import numpy as np
+<div id="editor-regression-example" data-code="import numpy as np
 from matplotlib import pyplot as plt
 
 # Generate sample data
@@ -138,21 +163,15 @@ plt.scatter(X, y, color='blue', alpha=0.5)
 plt.plot(X_new, y_pred, color='red', linewidth=2)
 plt.xlabel('X')
 plt.ylabel('y')
-plt.title(f'Linear Regression\nIntercept: {model.intercept:.2f}, Slope: {model.coefficients[0]:.2f}')
+plt.title(f'Linear Regression\nIntercept: {model.intercept.item():.2f}, Slope: {model.coefficients[0].item():.2f}')
 plt.grid(True)
 plt.show()
 
-print(f"Intercept: {model.intercept:.2f}")
-print(f"Coefficients: {model.coefficients[0]:.2f}")
-</pre>
-<div id="editor-regression-example"></div>
-<button id="run-regression-example" class="run-button">Run</button>
-<div id="output-regression-example" class="output"></div>
+print(f'Intercept: {model.intercept.item():.2f}')
+print(f'Coefficients: {model.coefficients[0].item():.2f}')"></div>
+    <button id="run-regression-example" class="run-button">Run</button>
+    <div id="output-regression-example" class="output"></div>
 </div>
-
-<script>
-createPyodideInstance('regression-example');
-</script>
 
 <h2 id="conclusion">Conclusion</h2>
 
@@ -170,6 +189,7 @@ createPyodideInstance('regression-example');
 .interactive-code {
     position: relative;
     margin-bottom: 1em;
+    overflow: visible;
 }
 .code-editor {
     border: 1px solid #ccc;
@@ -197,58 +217,187 @@ createPyodideInstance('regression-example');
 .run-button:hover {
     background: #45a049;
 }
+.text-output {
+    font-family: monospace;
+    white-space: pre-wrap;
+    margin-bottom: 1em;
+}
+.plot-output {
+    width: 100%;
+    max-width: 100%;
+    margin: 1em 0;
+    position: static;
+    overflow: visible;
+}
+.plot-output img {
+    max-width: 100%;
+    height: auto;
+}
+#plot-container {
+    position: static !important;
+    overflow: visible !important;
+    z-index: auto !important;
+    display: block !important;
+    margin: 1em 0 !important;
+}
 </style>
 
 <script>
-async function createPyodideInstance(elementId) {
-    const pyodide = await loadPyodide();
-    await pyodide.loadPackage(['numpy', 'matplotlib']);
-    
-    const editor = CodeMirror(document.getElementById(`editor-${elementId}`), {
-        value: document.getElementById(`code-${elementId}`).textContent,
-        mode: 'python',
-        theme: 'default',
-        lineNumbers: true,
-        viewportMargin: Infinity,
-        lineWrapping: true
-    });
+// Global variable to store the Pyodide instance
+let globalPyodide = null;
 
-    document.getElementById(`run-${elementId}`).addEventListener('click', async () => {
-        const output = document.getElementById(`output-${elementId}`);
-        output.textContent = 'Running...';
+// Initialize Pyodide
+async function setupPyodide() {
+    try {
+        console.log("Loading Pyodide...");
+        globalPyodide = await loadPyodide();
+        console.log("Loading packages...");
+        await globalPyodide.loadPackage(['numpy', 'matplotlib']);
+        console.log("Pyodide setup complete!");
+        return true;
+    } catch (error) {
+        console.error("Error setting up Pyodide:", error);
+        return false;
+    }
+}
+
+async function createPyodideInstance(elementId) {
+    console.log(`Setting up instance for ${elementId}`);
+    const outputDiv = document.getElementById(`output-${elementId}`);
+    
+    // Create separate containers for text and plot output
+    const textOutput = document.createElement('div');
+    textOutput.className = 'text-output';
+    outputDiv.appendChild(textOutput);
+
+    // Create plot container inside the output div
+    const plotOutput = document.createElement('div');
+    plotOutput.className = 'plot-output';
+    plotOutput.id = `plot-${elementId}`;
+    outputDiv.appendChild(plotOutput);
+    
+    try {
+        // Make sure Pyodide is initialized
+        if (!globalPyodide) {
+            textOutput.textContent = 'Initializing Python environment...';
+            await setupPyodide();
+        }
         
-        try {
-            // Clear previous matplotlib plots
-            await pyodide.runPythonAsync('import matplotlib.pyplot as plt; plt.clf()');
-            
-            // Run the code
-            const code = editor.getValue();
-            await pyodide.runPythonAsync(code);
-            
-            // Get the plot if one was created
-            const plotElements = document.getElementsByClassName('plot-output');
-            while(plotElements.length > 0) {
-                plotElements[0].parentNode.removeChild(plotElements[0]);
-            }
+        // Set up matplotlib with the Agg backend
+        await globalPyodide.runPythonAsync(`
+            import matplotlib
+            matplotlib.use('Agg')  # Use Agg backend
+            import matplotlib.pyplot as plt
+            plt.style.use('default')
+            plt.rcParams['figure.figsize'] = [10, 6]
+            plt.rcParams['figure.dpi'] = 100
+        `);
+
+        // Set up the editor
+        const editor = CodeMirror(document.getElementById(`editor-${elementId}`), {
+            value: document.getElementById(`editor-${elementId}`).getAttribute('data-code'),
+            mode: 'python',
+            theme: 'default',
+            lineNumbers: true,
+            viewportMargin: Infinity,
+            lineWrapping: true
+        });
+
+        // Set up print capture
+        await globalPyodide.runPythonAsync(`
+            import sys
+            from io import StringIO
+            class CaptureOutput:
+                def __init__(self):
+                    self.buffer = StringIO()
+                def write(self, text):
+                    self.buffer.write(text)
+                def flush(self):
+                    pass
+                def getvalue(self):
+                    return self.buffer.getvalue()
+                def clear(self):
+                    self.buffer.seek(0)
+                    self.buffer.truncate(0)
+            sys.stdout = CaptureOutput()
+        `);
+
+        // Set up the run button
+        document.getElementById(`run-${elementId}`).addEventListener('click', async () => {
+            textOutput.textContent = 'Running...';
+            plotOutput.innerHTML = '';
             
             try {
-                const fig = await pyodide.runPythonAsync(`
+                // Clear previous matplotlib plots and stdout
+                await globalPyodide.runPythonAsync(`
                     import matplotlib.pyplot as plt
-                    plt.gcf()
+                    plt.close('all')
+                    sys.stdout.clear()
                 `);
-                const plotDiv = document.createElement('div');
-                plotDiv.className = 'plot-output';
-                output.appendChild(plotDiv);
-                await fig.show(plotDiv);
-            } catch (e) {
-                // No plot to show
+                
+                // Run the code
+                const code = editor.getValue();
+                await globalPyodide.runPythonAsync(code);
+                
+                // Get printed output
+                const output = await globalPyodide.runPythonAsync('sys.stdout.getvalue()');
+                textOutput.textContent = output;
+                
+                // Handle plot - convert to image data URL
+                try {
+                    const imageData = await globalPyodide.runPythonAsync(`
+                        import matplotlib.pyplot as plt
+                        import io
+                        import base64
+                        
+                        # Save plot to bytes buffer
+                        buf = io.BytesIO()
+                        plt.gcf().savefig(buf, format='png', bbox_inches='tight')
+                        buf.seek(0)
+                        
+                        # Convert to base64 string
+                        img_str = base64.b64encode(buf.getvalue()).decode('utf-8')
+                        'data:image/png;base64,' + img_str
+                    `);
+                    
+                    // Create and append image element
+                    const img = document.createElement('img');
+                    img.src = imageData;
+                    img.style.width = '100%';
+                    plotOutput.appendChild(img);
+                    
+                } catch (e) {
+                    console.log("No plot to show:", e);
+                }
+                
+            } catch (err) {
+                console.error("Error running code:", err);
+                textOutput.textContent = 'Error: ' + err.message;
             }
-            
-        } catch (err) {
-            output.textContent = 'Error: ' + err.message;
-        }
-    });
+        });
+        
+        console.log(`Setup complete for ${elementId}`);
+        textOutput.textContent = 'Ready to run code!';
+        
+    } catch (error) {
+        console.error(`Error in setup:`, error);
+        textOutput.textContent = 'Error setting up Python environment: ' + error.message;
+    }
 }
+
+// Initialize when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM loaded, starting Pyodide setup");
+    setupPyodide().then(() => {
+        // Find all interactive code blocks and initialize them
+        document.querySelectorAll('.interactive-code').forEach(block => {
+            const id = block.id;
+            if (id) {
+                createPyodideInstance(id);
+            }
+        });
+    });
+});
 </script></article>
 
 <!-- MathJax Configuration -->

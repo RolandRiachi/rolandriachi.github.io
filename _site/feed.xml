@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-03-31T15:59:39-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Math &amp;amp; ML Blog</title><subtitle>Educational content about mathematics and machine learning</subtitle><author><name>Roland Riachi</name><email>your.email@example.com</email></author><entry><title type="html">Understanding Model Regularization</title><link href="http://localhost:4000/posts/understanding-model-regularization/" rel="alternate" type="text/html" title="Understanding Model Regularization" /><published>2024-04-01T00:00:00-04:00</published><updated>2024-04-01T00:00:00-04:00</updated><id>http://localhost:4000/posts/understanding-model-regularization</id><content type="html" xml:base="http://localhost:4000/posts/understanding-model-regularization/"><![CDATA[<p>In our <a href="/posts/introduction-to-linear-regression/">previous post on linear regression</a>, we explored the foundations of linear models. Today, we’ll dive into regularization techniques that help prevent overfitting in these models.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-04-04T15:29:34-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Math &amp;amp; ML Blog</title><subtitle>Educational content about mathematics and machine learning</subtitle><author><name>Roland Riachi</name><email>your.email@example.com</email></author><entry><title type="html">Understanding Model Regularization</title><link href="http://localhost:4000/posts/understanding-model-regularization/" rel="alternate" type="text/html" title="Understanding Model Regularization" /><published>2024-04-01T00:00:00-04:00</published><updated>2024-04-01T00:00:00-04:00</updated><id>http://localhost:4000/posts/understanding-model-regularization</id><content type="html" xml:base="http://localhost:4000/posts/understanding-model-regularization/"><![CDATA[<p>In our <a href="/posts/introduction-to-linear-regression/">previous post on linear regression</a>, we explored the foundations of linear models. Today, we’ll dive into regularization techniques that help prevent overfitting in these models.</p>
 
 <h2 id="why-regularization">Why Regularization?</h2>
 
@@ -115,9 +115,34 @@
 
 <p>Try modifying the parameters below to see how they affect the linear regression:</p>
 
+<style>
+.interactive-code .CodeMirror {
+    height: calc(50 * 24px);"
+}
+
+.interactive-code {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+}
+
+#output-regression-example {
+    position: relative;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    clear: both;
+}
+
+.run-button {
+    position: relative;
+    margin: 10px 0;
+}
+</style>
+
 <div class="interactive-code" id="regression-example">
-<pre id="code-regression-example">
-import numpy as np
+<div id="editor-regression-example" data-code="import numpy as np
 from matplotlib import pyplot as plt
 
 # Generate sample data
@@ -159,21 +184,15 @@ plt.scatter(X, y, color='blue', alpha=0.5)
 plt.plot(X_new, y_pred, color='red', linewidth=2)
 plt.xlabel('X')
 plt.ylabel('y')
-plt.title(f'Linear Regression\nIntercept: {model.intercept:.2f}, Slope: {model.coefficients[0]:.2f}')
+plt.title(f'Linear Regression\nIntercept: {model.intercept.item():.2f}, Slope: {model.coefficients[0].item():.2f}')
 plt.grid(True)
 plt.show()
 
-print(f"Intercept: {model.intercept:.2f}")
-print(f"Coefficients: {model.coefficients[0]:.2f}")
-</pre>
-<div id="editor-regression-example"></div>
-<button id="run-regression-example" class="run-button">Run</button>
-<div id="output-regression-example" class="output"></div>
+print(f'Intercept: {model.intercept.item():.2f}')
+print(f'Coefficients: {model.coefficients[0].item():.2f}')"></div>
+    <button id="run-regression-example" class="run-button">Run</button>
+    <div id="output-regression-example" class="output"></div>
 </div>
-
-<script>
-createPyodideInstance('regression-example');
-</script>
 
 <h2 id="conclusion">Conclusion</h2>
 
